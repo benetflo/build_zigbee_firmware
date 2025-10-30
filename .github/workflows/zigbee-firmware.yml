@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: NabuCasa/silabs-firmware-builder
-          ref: v2024.8.20
+          ref: v2024.8.6
           path: builder_repo
       
       - name: Install SDK extensions
