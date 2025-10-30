@@ -58,7 +58,7 @@ jobs:
           echo "Using toolchain_args: $toolchain_args"
 
           # Build
-          /opt/venv/bin/python3 builder_repo/tools/build_project.py \
+          python3 builder_repo/tools/build_project.py \
             $sdk_args \
             $toolchain_args \
             --manifest docker/zigbee2mqtt/build/hemla_zigbee_ncp.yaml \
