@@ -1,3 +1,5 @@
+# Everything is the same except ezsp_version is none, should be 7.4.4.0
+
 name: Hemla Zigbee
 device: MGM210PB22JIA
 base_project: src/ncp-uart-hw
@@ -7,7 +9,7 @@ toolchain: "12.2.1.20221205"
 
 gbl:
   fw_type: ncp-uart-hw
-  ezsp_version: "7.4.0.0"
+  ezsp_version: "7.4.4.0"
   baudrate: 115200
   fw_variant: standard
 
