@@ -5,6 +5,7 @@ device: MGM210PB22JIA
 base_project: src/ncp-uart-hw
 filename: "{manifest_name}_{ezsp_version}"
 sdk: "gecko_sdk:4.4.4"
+sdk_version_override: "4.4.4"
 toolchain: "12.2.1.20221205"
 
 gbl:
