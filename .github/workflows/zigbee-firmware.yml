@@ -24,6 +24,8 @@ jobs:
       
       - name: Install SDK extensions
         run: |
+          rm -rf ~/.slc_cli
+        
           for sdk in /*_sdk_*; do
             echo "Trusting SDK: $sdk"
             slc signature trust --sdk "$sdk"
