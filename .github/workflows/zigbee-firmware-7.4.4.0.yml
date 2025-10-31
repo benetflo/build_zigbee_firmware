@@ -63,7 +63,7 @@ jobs:
           python3 builder_repo/tools/build_project.py \
             $sdk_args \
             $toolchain_args \
-            --manifest docker/zigbee2mqtt/build/hemla_zigbee_ncp.yaml \
+            --manifest docker/zigbee2mqtt/build/hemla_zigbee_ncp_7.4.4.0.yaml \
             --build-dir build \
             --build-system makefile \
             --output-dir outputs \
