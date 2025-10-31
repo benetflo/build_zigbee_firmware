@@ -1,11 +1,11 @@
-name: Build Zigbee Firmware
+name: Build Zigbee Firmware 7.4.4.0
 
 on:
   workflow_dispatch:
 
 jobs:
   build:
-    name: Build Zigbee Firmware 7.4.4.0
+    name: Build Zigbee Firmware
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/nabucasa/silabs-firmware-builder:f501928aae503edc
