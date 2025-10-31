@@ -54,7 +54,7 @@ jobs:
           done
 
           ls -lah docker/zigbee2mqtt/build
-          cat docker/zigbee2mqtt/build/hemla_zigbee_ncp.yaml
+          cat docker/zigbee2mqtt/build/zigbee_ncp_7.4.4.0.yaml
 
           echo "Using sdk_args: $sdk_args"
           echo "Using toolchain_args: $toolchain_args"
