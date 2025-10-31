@@ -1,1 +1,75 @@
+name: Build Zigbee Firmware
 
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Zigbee Firmware
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/nabucasa/silabs-firmware-builder:f0f7b0bc15bed5ba
+      options: --user root
+    
+    steps:
+      - name: Checkout local repository containing manifest files
+        uses: actions/checkout@v4
+
+      - name: Checkout silabs-firmware-builder
+        uses: actions/checkout@v4
+        with:
+          repository: NabuCasa/silabs-firmware-builder
+          ref: v2025.04.04-1
+          path: builder_repo
+      
+      - name: Install SDK extensions
+        run: |
+          for sdk in /*_sdk_*; do
+            echo "Trusting SDK: $sdk"
+            slc signature trust --sdk "$sdk"
+            ln -s $PWD/builder_repo/gecko_sdk_extensions "$sdk"/extension
+            for ext in "$sdk"/extension/*/; do
+              echo "Trusting SDK extensions: $ext"
+              slc signature trust --sdk "$sdk" --extension-path "$ext"
+            done
+          done
+      
+      - name: Build firmware
+        id: build-firmware
+        run: |
+          # Pass all SDKs as consecutive --sdk arguments
+          sdk_args=""
+          for sdk_dir in /*_sdk*; do
+            sdk_args="$sdk_args --sdk $sdk_dir"
+          done
+          # Pass all toolchains as consecutive --toolchain arguments
+          toolchain_args=""
+          for toolchain_dir in /opt/*arm-none-eabi*; do
+            toolchain_args="$toolchain_args --toolchain $toolchain_dir"
+          done
+          ls -lah docker/zigbee2mqtt/build
+          cat docker/zigbee2mqtt/build/hemla_zigbee_ncp.yaml
+          echo "Using sdk_args: $sdk_args"
+          echo "Using toolchain_args: $toolchain_args"
+          # Build
+          /opt/venv/bin/python3 builder_repo/tools/build_project.py \
+            $sdk_args \
+            $toolchain_args \
+            --manifest docker/zigbee2mqtt/build/hemla_zigbee_ncp.yaml \
+            --build-dir build \
+            --build-system makefile \
+            --output-dir outputs \
+            --output gbl \
+            --output hex \
+            --output out
+      
+          output_basename=$(basename -- $(basename -- $(ls -1 outputs/*.gbl | head -n 1)) .gbl)
+          echo "output_basename=$output_basename" >> $GITHUB_OUTPUT
+
+      - name: Upload firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware-build-${{ steps.build-firmware.outputs.output_basename }}
+          path: outputs/*
+          compression-level: 9
+          if-no-files-found: error
