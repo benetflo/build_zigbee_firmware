@@ -1,4 +1,5 @@
-# Everything is the same except ezsp_version is none, should be 7.4.4.0
+# EZSP version 7.4.4.0
+# SDK version 4.4.4
 
 name: Hemla Zigbee
 device: MGM210PB22JIA
@@ -26,7 +27,7 @@ c_defines:
   EMBER_SOURCE_ROUTE_TABLE_SIZE: 200
   
   SL_IOSTREAM_USART_VCOM_BAUDRATE: 115200
-  SL_IOSTREAM_USART_VCOM_FLOW_CONTROL_TYPE: usartHwFlowControlNone
+  SL_IOSTREAM_USART_VCOM_FLOW_CONTROL_TYPE: usartHwFlowControlCtsAndRts                              #usartHwFlowControlNone
   SL_IOSTREAM_USART_VCOM_PERIPHERAL: USART0
   SL_IOSTREAM_USART_VCOM_PERIPHERAL_NO: 0
   
@@ -35,3 +36,10 @@ c_defines:
   
   SL_IOSTREAM_USART_VCOM_RX_PORT: gpioPortA
   SL_IOSTREAM_USART_VCOM_RX_PIN: 6
+
+# double check these pins, switch if not working. Remove and set HwFlowControlCtsAndRts to none if not working
+  SL_IOSTREAM_USART_VCOM_CTS_PORT: gpioPortC
+  SL_IOSTREAM_USART_VCOM_CTS_PIN: 1
+
+  SL_IOSTREAM_USART_VCOM_RTS_PORT: gpioPortD
+  SL_IOSTREAM_USART_VCOM_RTS_PIN: 2
