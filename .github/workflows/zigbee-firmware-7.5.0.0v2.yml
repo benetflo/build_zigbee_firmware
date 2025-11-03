@@ -1,4 +1,4 @@
-name: Build Zigbee Firmware ?
+name: Build Zigbee Firmware 7.5.0.0 (sdk version 4.4.6) v2
 
 on:
   workflow_dispatch:
