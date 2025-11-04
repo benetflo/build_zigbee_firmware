@@ -12,7 +12,6 @@ gbl:
   fw_type: ncp-uart-hw
   dynamic: ["ezsp_version"]
   baudrate: 115200
-  #fw_variant: standard
 
 configuration:
   EMBER_CHILD_TABLE_SIZE: 32
@@ -37,7 +36,6 @@ c_defines:
   SL_IOSTREAM_USART_VCOM_RX_PORT: gpioPortA
   SL_IOSTREAM_USART_VCOM_RX_PIN: 6
 
-# TESTING CODE REMOVE IF NOT WORKING
   SL_IOSTREAM_USART_VCOM_CTS_PORT: gpioPortD
   SL_IOSTREAM_USART_VCOM_CTS_PIN: 2
 
