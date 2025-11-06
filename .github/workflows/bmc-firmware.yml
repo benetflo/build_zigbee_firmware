@@ -1,0 +1,26 @@
+name: Build BMC firmware
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    name: Build BMC firmware
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout local repository
+        uses: actions/checkout@v4
+
+      - name: Build Firmware
+        id: build-firmware
+        run: make Release
+        working-directory: BMC/E45_Hem_G_BMC_FW
+        
+      - name: Upload firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: bmc-firmware
+          path: |
+            BMC/E45_Hem_G_BMC_FW/Release/*.bin
+            BMC/E45_Hem_G_BMC_FW/Release/*.list
+            BMC/E45_Hem_G_BMC_FW/Release/*.map
