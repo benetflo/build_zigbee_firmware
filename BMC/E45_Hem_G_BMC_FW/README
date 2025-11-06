@@ -1,0 +1,32 @@
+Import project
+~~~~~~~~~~~~~~~~~~~
+Install STM32CubeIDE
+Open the program 
+File->Import 
+Select Import ac6 System Workbench for STM32 Projects
+Built the project by selecting Project->Build All
+In the folder Release you can find file E45_BMC_FW_LL.elf which is used for programming BMC MCU.
+
+Pre-build and Post-build
+~~~~~~~~~~~~~~~~~~~
+Upon the need there are additional scripts under "scripts" folder that can include information about the build (tag and hash). 
+This information can be later used by requesting it from Raspberry side over the UART.
+
+
+Flashing the BMC
+~~~~~~~~~~~~~~~~
+
+The BMC can be programmed with ST-LINK programmed ( Either a development board or dedicated programmer). It is recommended while programming BMC to take out the Raspberry, as the programming of BMC will cause RPI to restart hardway several times. 
+The programming is done over STM32CubeProgrammer. Start the program, import the previously generated programming file (e.g. E45_BMC_FW_LL.elf), press Connect. 
+Press Download image.
+![Preview](Info/Programming.png)
+
+
+Board peripherals in Linux
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+UARTs:
+  /dev/ttyAMA0 debug console
+  /dev/ttyAMA1 GSM modem
+  /dev/ttyAMA2 BMC/MCU
+  /dev/ttyAMA3 Zigbee
