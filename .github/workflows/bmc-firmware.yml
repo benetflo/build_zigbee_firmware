@@ -20,6 +20,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: bmc-firmware
-          path: |
-            BMC/E45_Hem_G_BMC_FW/Release/*.elf
-            BMC/E45_Hem_G_BMC_FW/Release/*.map
+          path: BMC/E45_Hem_G_BMC_FW/Release/*
