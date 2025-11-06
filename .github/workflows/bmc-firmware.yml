@@ -21,6 +21,5 @@ jobs:
         with:
           name: bmc-firmware
           path: |
-            BMC/E45_Hem_G_BMC_FW/Release/*.bin
-            BMC/E45_Hem_G_BMC_FW/Release/*.list
+            BMC/E45_Hem_G_BMC_FW/Release/*.elf
             BMC/E45_Hem_G_BMC_FW/Release/*.map
