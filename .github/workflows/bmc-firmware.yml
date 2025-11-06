@@ -13,10 +13,10 @@ jobs:
       - name: Checkout local repository
         uses: actions/checkout@v4
 
-      - name: Setup ARM toolchain
-        uses: danielpinto8zz6/setup-arm@v1
-        with:
-          gcc-version: '12.2-2022.11'
+      - name: Install ARM toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-arm-none-eabi make
 
       - name: Build Firmware
         id: build-firmware
