@@ -6,14 +6,18 @@ jobs:
   build:
     name: Build BMC firmware
     runs-on: ubuntu-latest
-    container:
-      image: armgcc/arm-none-eabi:12.2.1
-      options: --user root
+
+
 
     steps:
       - name: Checkout local repository
         uses: actions/checkout@v4
-          
+
+      - name: Setup ARM toolchain
+        uses: danielpinto8zz6/setup-arm@v1
+        with:
+          gcc-version: '12.2-2022.11'
+
       - name: Build Firmware
         id: build-firmware
         run: make Release
