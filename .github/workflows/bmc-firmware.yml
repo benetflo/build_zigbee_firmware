@@ -19,7 +19,7 @@ jobs:
       - name: Build Firmware
         id: build-firmware
         run: make Release
-        working-directory: BMC/E45_Hem_G_BMC_FW
+        working-directory: BMC/E45_Hem_G_BMC_FW/Release
 
       - name: Check Release folder
         run: ls -l BMC/E45_Hem_G_BMC_FW/Release
