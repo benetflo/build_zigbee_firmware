@@ -134,6 +134,99 @@ clean:
 |dec        |13760         |13592            |
 |hex        |35c0          |3518             |
 
-benji@BensLaptop:~/github_projektbuild_zigbee_ncp_firmware/BMC$ arm-none-eabi-size E45_BMC_FW_LL.elf
-   text    data     bss     dec     hex filename
-  10080      24    3488   13592    3518 E45_BMC_FW_LL.elf
+Some differences here. 168 more bytes text(code) in the STM32 compiled code.
+
+- Compared the files ones again with:
+```
+arm-none-eabi-nm -S --size-sort  STM32.elf
+```
+- Used [diffchecker](https://www.diffchecker.com/text-compare/) to compare the results. There are indeed some differences, most involving power supply functions.
+
+- I checked the files of one of the missing functions, but the code is there in my terminal. Maybe the linker is removing it for optimization? I tried to remove the linker flag "--gc-sections" but that gave a warning. The firmware got to large to fit in MCU flash.
+
+- Found the C file where most of the missing functions are located. Tried to add __attribute__((used)) before every function that was missing in the terminal compiled binary. Compiled again, still the same size so checked again with:
+```
+arm-none-eabi-size  STM32.elf
+```
+
+- I went back and added this to the **power_fsm.c** file:
+```
+__attribute__((used, noinline))
+```
+The terminal firmware has now grown in text and hex!
+
+- Now I'll try to add "__attribute__((used, noinline))" to the rest that are missing. But first I have to find out what's missing:
+
+```
+arm-none-eabi-nm -n STM32.elf > stm32.syms
+arm-none-eabi-nm -n E45_BMC_FW_LL.elf > term.syms
+```
+```
+awk '{print $3}' stm32.syms | sort > stm32.names
+awk '{print $3}' term.syms | sort > term.names
+```
+```
+comm -23 stm32.names term.names > missing_in_terminal.txt
+```
+We now have a text file with the missing code:
+```
+L_EXTI_SetEXTISource
+LL_TIM_OC_SetMode
+LL_USART_SetBaudRate
+OFFSET_TAB_CCMRx
+awk '{print $3}' stm32.syms | sort > stm32.names
+awk '{print $3}' term.syms | sort > term.names
+RCC_GetHCLKClockFreq
+RCC_GetPCLK1ClockFreq
+SDK_ADC_StartConversion
+SHIFT_TAB_OCxx
+__NVIC_SetPriority
+__NVIC_SystemReset
+comms_calcChkSum
+rb_incBufReadPtr
+rb_incBufWritePtr
+reg_CONFIG_handler
+shutdownActions
+```
+
+- I tried adding the same compile flags as STM32CubeIDE does, the file now got larger, I will compare again. Nothing was missing! I will try checking the other way around if there is something new in the terminal compiled file vs the STM32CubeIDE file:
+
+```
+comm -13 stm32.names term.names > missing_in_STM32.txt
+```
+These do not exist in the STM32CubeIDE compiled version but they do exist in the one compiled in the terminal.
+```
+__TMC_END__
+__fini_array_end
+__fini_array_start
+deregister_tm_clones
+register_tm_clones
+```
+
+- Tried removing -static but the size is still larger than the STM32 version. Doesn't seem to affect the size
+
+- I tried different optimization flags (Os, Og, O1, O2, O2, Ofast) it changed the size of the file but was not exactly the same. Probably different flags in STM32CubeIDE, I should check compile flag settings in STM32CubeIDE.
+
+# Next steps try flashing firmware
+
+- I currently have:
+```
+Terminal version size:           40K
+STM32CubeIDE version size :      36K
+
+//Difference could be hardware guy build with earlier STM32CubeIDE version or the extras?
+```
+
+Terminal version as extras:
+```
+__TMC_END__
+__fini_array_end
+__fini_array_start
+deregister_tm_clones
+register_tm_clones
+
+# Note: Terminal build adds extra GCC runtime symbols
+# (__TMC_END__, __fini_array_start/end, deregister_tm_clones, register_tm_clones)
+# These are bookkeeping symbols only and do not affect firmware functionality.
+```
+
