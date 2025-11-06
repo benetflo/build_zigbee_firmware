@@ -4,7 +4,6 @@
 ### STM32CubeIDE ###
 
 Debug/
-Release/
 *.bin
 *.elf
 
