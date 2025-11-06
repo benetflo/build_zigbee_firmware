@@ -56,8 +56,41 @@ default.size.stdout \
 OBJDUMP_LIST += \
 E45_BMC_FW_LL.list \
 
+# Hitta alla .c filer rekursivt
+SOURCES := $(shell find ../Core ../Drivers ../Init ../sdk -name '*.c')
+
+# Hitta alla .s filer
+ASM_SOURCES := $(shell find ../Core/Startup -name '*.s')
+
+# Generera objektfil-namn (behåll sökväg)
+C_OBJECTS := $(SOURCES:.c=.o)
+ASM_OBJECTS := $(ASM_SOURCES:.s=.o)
+ALL_OBJECTS := $(C_OBJECTS) $(ASM_OBJECTS)
+
+
+# Compilation flags
+CFLAGS = -mcpu=cortex-m0plus -O2 -Wall -ffunction-sections -fdata-sections \
+         -I../Core/Inc \
+         -I../Drivers/STM32C0xx_HAL_Driver/Inc \
+         -I../Drivers/STM32C0xx_HAL_Driver/Inc/Legacy \
+         -I../Drivers/CMSIS/Device/ST/STM32C0xx/Include \
+         -I../Drivers/CMSIS/Include \
+         -I../sdk/Inc \
+         -I../Init/Inc \
+         -I../Core/Drivers/Button/Inc \
+         -I../Core/Drivers/Leds/Inc \
+         -DSTM32C031xx -DUSE_FULL_LL_DRIVER
+
+# C compile rule
 %.o: %.c
-	arm-none-eabi-gcc -mcpu=cortex-m0plus -O2 -Wall -ffunction-sections -fdata-sections -c $< -o $@
+	@echo 'Compiling: $<'
+	arm-none-eabi-gcc $(CFLAGS) -c $< -o $@
+	@echo ' '
+# Assembly rule
+%.o: %.s
+	@echo 'Assembling: $<'
+	arm-none-eabi-gcc -mcpu=cortex-m0plus -mthumb -x assembler-with-cpp -c $< -o $@
+	@echo ' '
 
 # All Target
 all: main-build
@@ -66,10 +99,14 @@ all: main-build
 main-build: E45_BMC_FW_LL.elf secondary-outputs
 
 # Tool invocations
-E45_BMC_FW_LL.elf E45_BMC_FW_LL.map: $(OBJS) $(USER_OBJS) ../STM32C031G4UX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "E45_BMC_FW_LL.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0plus -T"../STM32C031G4UX_FLASH.ld" --specs=nosys.specs -Wl,-Map="E45_BMC_FW_LL.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+E45_BMC_FW_LL.elf: $(ALL_OBJECTS)
+	@echo 'Linking: $@'
+	arm-none-eabi-gcc -o "$@" $(ALL_OBJECTS) -mcpu=cortex-m0plus \
+	-T"../STM32C031G4UX_FLASH.ld" --specs=nosys.specs \
+	-Wl,-Map="E45_BMC_FW_LL.map" -Wl,--gc-sections -static \
+	--specs=nano.specs -mfloat-abi=soft -mthumb \
+	-Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
-	@echo ' '
 
 default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	arm-none-eabi-size  $(EXECUTABLES)

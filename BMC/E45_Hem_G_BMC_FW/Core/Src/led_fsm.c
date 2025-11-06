@@ -63,7 +63,7 @@ void LedSwirl() {
   SendColorCommandArray((uint8_t *)colors, sizeof(colors));
 }
 
-
+__attribute__((used, noinline))
 void LedsToGreen(void) {
   uint32_t colors[LED_COUNT];  // Array to hold the color commands
 

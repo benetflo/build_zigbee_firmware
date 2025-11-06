@@ -324,50 +324,62 @@ void updateADCreadings() {
   voltageBuffer[2] = SDK_ADC_calculateVin(voltageBuffer[2], 100000, 30000); //vsys
 }
 
+__attribute__((used, noinline))
 void enableMainPower() {
   SDK_GPIO_WritePin(GPIOA, LL_GPIO_PIN_12, GPIO_PIN_HIGH);
 }
 
+__attribute__((used, noinline))
 void disableMainPower() {
   SDK_GPIO_WritePin(GPIOA, LL_GPIO_PIN_12, GPIO_PIN_LOW);
 }
 
+__attribute__((used, noinline))
 void enableGlobalEnableRpi() {
   SDK_GPIO_WritePin(GPIOA, LL_GPIO_PIN_15, GPIO_PIN_LOW);
 }
 
+__attribute__((used, noinline))
 void disableGlobalEnableRpi() {
   SDK_GPIO_WritePin(GPIOA, LL_GPIO_PIN_15, GPIO_PIN_HIGH);
 }
 
+__attribute__((used, noinline))
 void enableUpsBoost() {
   SDK_GPIO_WritePin(GPIOA, LL_GPIO_PIN_8, GPIO_PIN_HIGH);
 }
 
+__attribute__((used, noinline))
 void disableUpsBoost() {
   SDK_GPIO_WritePin(GPIOA, LL_GPIO_PIN_8, GPIO_PIN_LOW);
 }
 
+__attribute__((used, noinline))
 void enableCharging() {
   SDK_GPIO_WritePin(GPIOA, LL_GPIO_PIN_4, GPIO_PIN_LOW);
 }
 
+__attribute__((used, noinline))
 void disableCharging() {
   SDK_GPIO_WritePin(GPIOA, LL_GPIO_PIN_4, GPIO_PIN_HIGH);
 }
 
+__attribute__((used, noinline))
 void enableUpsLong() {
   SDK_GPIO_WritePin(GPIOA, LL_GPIO_PIN_7, GPIO_PIN_HIGH);
 }
 
+__attribute__((used, noinline))
 void disableUpsLong() {
   SDK_GPIO_WritePin(GPIOA, LL_GPIO_PIN_7, GPIO_PIN_LOW);
 }
 
+__attribute__((used, noinline))
 void enableBatteryMeasure() {
   SDK_GPIO_WritePin(GPIOA, LL_GPIO_PIN_6, GPIO_PIN_LOW);
 }
 
+__attribute__((used, noinline))
 void disableBatteryMeasure() {
   SDK_GPIO_WritePin(GPIOA, LL_GPIO_PIN_6, GPIO_PIN_HIGH);
 }
@@ -376,6 +388,7 @@ uint16_t getBatteryVoltage() {
   return voltageBuffer[0];
 }
 
+__attribute__((used, noinline))
 uint16_t getMainPowerVoltage() {
   return voltageBuffer[1];
 }
