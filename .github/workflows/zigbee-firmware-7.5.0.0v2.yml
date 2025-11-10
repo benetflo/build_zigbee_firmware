@@ -47,7 +47,7 @@ jobs:
           for toolchain_dir in /opt/*arm-none-eabi*; do
             toolchain_args="$toolchain_args --toolchain $toolchain_dir"
           done
-          ls -lah docker/zigbee2mqtt/build
+          ls -lah Zigbee/docker/zigbee2mqtt/build
           cat Zigbee/docker/zigbee2mqtt/build/zigbee_ncp_v2_1.yaml
           echo "Using sdk_args: $sdk_args"
           echo "Using toolchain_args: $toolchain_args"
