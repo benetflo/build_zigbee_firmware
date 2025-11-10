@@ -1,0 +1,38 @@
+name: Build BMC firmware
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    name: Build BMC firmware
+    runs-on: ubuntu-latest
+
+
+
+    steps:
+      - name: Checkout local repository
+        uses: actions/checkout@v4
+
+      - name: Install ARM toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-arm-none-eabi make
+
+      - name: Build Firmware
+        id: build-firmware
+        run: |
+          set -e
+          make all
+        working-directory: BMC/E45_Hem_G_BMC_FW/Release
+
+      - name: Check Release folder
+        run: ls -l BMC/E45_Hem_G_BMC_FW/Release
+      
+      - name: Upload firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: bmc-firmware
+          path: |
+            BMC/E45_Hem_G_BMC_FW/Release/*.elf
+            BMC/E45_Hem_G_BMC_FW/Release/*.map
+
