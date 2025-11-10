@@ -209,6 +209,52 @@ register_tm_clones
 
 # Next steps try flashing firmware
 
+- I got a ST-LINK / V2 from Axel that can be used to flash the BMC firmware. Things to figure out before I begin flashing:
+
+```
+- One of the cables was disconnected before I got it so I have to figure out where it is suppose to be connected. 
+- I have to remove the Raspberry from the module, since the guide recommended it.
+- Install the STM32CubeProgrammer and figure out how it works
+- Check with Algis if there is any risk of flashing firmware that might not be 100% correct, for example my terminal built code.
+```
+
+- I installed STM32CubeProgrammer from [STM32](https://www.st.com/en/development-tools/stm32cubeprog.html#get-software)
+
+- I connected the ST LINK / V2 but the program does not seem to recognize it. It shows up in "Enhetshanteraren" under "USB-styrenheter". So some configuration must probably be done in the program. I have to figure out where to connect the ST LINK on the module.
+
+- After checking the Hemla modules schematic I found out which of the holes is for the BMC. You can also see the STM32 chip located on the module, it's the hole closest to that. 
+
+- I removed the CM5, just so that is done. Then I connected the STM LINK / V2 to the module.
+
+- Now to figure out where the disconnected cable should go. After looking into the data sheet of the [TC2030-IDC](https://oss.origin-ic.com/productsFiles/pdf/TC2030-IDC_RevB.pdf) and the user manual for the [STLINKV2](https://www.st.com/en/development-tools/st-link-v2.html#documentation) I could figure out where the last cable should go. The cable that was disconnected was the GND cable so I connected it to "pin" 20, which is GND.
+
+- Connections to 20 pin on ST LINK referring to user manual:
+```
+Blue cable -> 1 (red line) (VAPP, VCC, MCU VDD)
+Yellow cable -> 7 (SWDIO)
+Orange cable -> 9 (CLK)
+Green cable -> 15 (NRST)
+Black cable -> 20 (GND)
+```
+
+These are connected to the TC2030-IDC cable like this, referring to the TC2030-IDC datasheet:
+```
+Blue cable -> 1 (red line) (top left)
+Yellow cable -> 2
+Green cable -> 3
+Orange cable -> 4
+Black cable -> 5
+Empty -> 6
+```
+
+
+
+
+
+
+
+# Current terminal firmware
+
 - I currently have:
 ```
 Terminal version size:           40K
